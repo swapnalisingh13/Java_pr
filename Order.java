@@ -1,22 +1,46 @@
-package Pr_6_B_OrderSystem;
+package AmazonSystem.Order;
+import AmazonSystem.Product.*;
+import AmazonSystem.Customer.*;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.HashMap;
 
 public class Order {
-    private String orderId;
-    private Map<String, Integer> items;
+    private int orderId;
+    private Customer customer;
+    private HashMap<Integer, String> orderStatus;
 
-    public Order(Map<String, Integer> items) {
-        this.orderId = UUID.randomUUID().toString();
-        this.items = items;
+    public Order(int orderId, Customer customer) {
+        this.orderId = orderId;
+        this.customer = customer;
+        this.orderStatus = new HashMap<>();
     }
 
-    public String getOrderId() {
-        return orderId;
+    public void updateOrderStatus(int statusId, String status) {
+        orderStatus.put(statusId, status);
     }
 
-    public Map<String, Integer> getItems() {
-        return items;
+
+    public String getOrderStatus(int orderId) {
+        return orderStatus.getOrDefault(orderId, "Order not found.");
     }
+
+    public String getOrderStatusByCustomerId(int customerId) {
+        StringBuilder sb = new StringBuilder();
+        for (int key : orderStatus.keySet()) {
+            if (key / 1000 == customerId) {
+                sb.append("Order ID: ").append(key).append(" | Status: ").append(orderStatus.get(key)).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String getOrderTracking(int orderId) {
+        String status = orderStatus.getOrDefault(orderId, "Order not found.");
+        if (!status.equals("Order not found.")) {
+            return "Order ID: " + orderId + " | Status: " + status;
+        }
+        return "Order not found.";
+    }
+
 }
+
